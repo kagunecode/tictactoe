@@ -1,6 +1,7 @@
 const body = document.body
 const elementContainer = document.querySelector('.center-box')
 const startButton = document.querySelector('#start-button')
+let turn = 1
 
 startButton.addEventListener('click', deleteElements)
 
@@ -9,7 +10,7 @@ const Player = (name, symbol) => {
     const getSymbol = () => symbol
 
     const playLog = position => {
-        return `${name} has played in position ${position}`
+        return `${name} has played in position ${Number(position) + 1}`
     }
 
     const win = () => {
@@ -21,11 +22,10 @@ const Player = (name, symbol) => {
 
 const Game = () => {
     const board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    let currentTurn = 1
     let position = 0
     const play = (player, e) => {
         position = e.target.getAttribute('data-id')
-        board[position - 1] = player.getSymbol()
+        board[position] = player.getSymbol()
         window.alert(player.playLog(position))
         e.target.innerText = player.getSymbol()
     }
@@ -79,5 +79,15 @@ function deleteElements() {
     }
 
     const boxes = document.querySelectorAll('.box')
-    boxes.forEach(box => box.addEventListener('click', game.play.bind(this, player1)))
+    boxes.forEach(box => box.addEventListener('click', e => {
+        if (turn % 2 != 0) {
+            game.play(player1, e)
+            turn += 1
+            game.checkBoard(player1)
+        } else {
+            game.play(player2, e)
+            turn += 1
+            game.checkBoard(player2)
+        }
+    }))
 }
