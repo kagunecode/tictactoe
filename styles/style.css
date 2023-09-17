@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+body {
+    --background-color: white;
+    --accent-color: #4059AD;
+    --light-accent: #F7F8FF;
+    --main-gray: #707070;
+
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    font-family: 'Raleway', sans-serif;
+    color: var(--accent-color);
+}
+
+.init-container {
+    --bg-image: url(/assets/light-grid.svg);
+    --bg-opacity: 0.7;
+
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    isolation: isolate;
+}
+
+.init-container::after {
+    content: '';
+    background-image: var(--bg-image);
+    opacity: var(--bg-opacity);
+
+    z-index: -100;
+    inset: 0;
+    position: absolute;
+    background-size: cover;
+    background-position: center;
+}
+
+.center-box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    border: solid var(--main-gray);
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(9px);
+    border-radius: .5rem;
+    padding: 1rem 3rem;
+    border-width: .13rem;
+}
+
+
+.player-field {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-title {
+    font-size: 4rem;
+    font-weight: bold;
+}
+
+label {
+    font-size: 2rem;
+    font-weight: 600;
+}
+
+input {
+    border-radius: .7rem;
+    border: solid var(--accent-color);
+    border-width: .1rem;
+    background-color: var(--light-accent);
+    height: 3rem;
+    font-size: 2rem;
+    padding: 0 .5rem;
+}
+
+button {
+    font-size: 2rem;
+    margin: 3rem;
+    border: none;
+    background-color: var(--accent-color);
+    border-radius: .5rem;
+    padding: .6rem 6rem;
+    font-family: inherit;
+    font-weight: bold;
+    color: white;
+}
+
+button:hover {
+    cursor: pointer;
+}
