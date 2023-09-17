@@ -1,3 +1,10 @@
+const body = document.body
+const elementContainer = document.querySelector('.center-box')
+const startButton = document.querySelector('#start-button')
+
+startButton.addEventListener('click', deleteElements)
+
+
 const Player = (name, symbol) => {
     const getSymbol = () => symbol
 
@@ -14,9 +21,13 @@ const Player = (name, symbol) => {
 
 const Game = () => {
     const board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    const play = (player, position) => {
+    let currentTurn = 1
+    let position = 0
+    const play = (player, e) => {
+        position = e.target.getAttribute('data-id')
         board[position - 1] = player.getSymbol()
         window.alert(player.playLog(position))
+        e.target.innerText = player.getSymbol()
     }
 
     const checkBoard = (player) => {
@@ -40,4 +51,33 @@ const Game = () => {
     }
 
     return { play, checkBoard }
+}
+
+function deleteElements() {
+    const player1 = Player(document.getElementById('playerOneName').value, 'X')
+    const player2 = Player(document.getElementById('playerTwoName').value, 'O')
+    const game = Game()
+    while (elementContainer.lastChild) {
+        elementContainer.removeChild(elementContainer.lastChild)
+    }
+
+    let gameContainer = document.createElement('div')
+    gameContainer.classList.add('game-container')
+    elementContainer.appendChild(gameContainer)
+
+    let gameAlert = document.createElement('h1')
+    gameAlert.classList.add('game-alert')
+    gameAlert.innerText = `Let's start!`
+    elementContainer.append(gameAlert)
+
+    for (let i = 0; i < 9; i++) {
+        let newDiv = document.createElement('div')
+        newDiv.classList.add('box')
+        newDiv.setAttribute('data-id', i)
+        console.log(i)
+        gameContainer.appendChild(newDiv)
+    }
+
+    const boxes = document.querySelectorAll('.box')
+    boxes.forEach(box => box.addEventListener('click', game.play.bind(this, player1)))
 }
