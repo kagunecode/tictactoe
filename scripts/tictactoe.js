@@ -11,7 +11,29 @@ const GameBoard = () => {
         return true
     }
 
-    return { printBoard, playValue }
+    const checkBoard = () => {
+        if (board[0] == player.getSymbol() && board[1] == player.getSymbol() && board[2] == player.getSymbol()) {
+            return 'row 1'
+        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[5] == player.getSymbol()) {
+            return 'row 2'
+        } else if (board[6] == player.getSymbol() && board[7] == player.getSymbol() && board[8] == player.getSymbol()) {
+            return 'row 3'
+        } else if (board[0] == player.getSymbol() && board[3] == player.getSymbol() && board[6] == player.getSymbol()) {
+            return 'column 1'
+        } else if (board[1] == player.getSymbol() && board[4] == player.getSymbol() && board[7] == player.getSymbol()) {
+            return 'column 2'
+        } else if (board[2] == player.getSymbol() && board[5] == player.getSymbol() && board[8] == player.getSymbol()) {
+            return 'column 3'
+        } else if (board[0] == player.getSymbol() && board[4] == player.getSymbol() && board[8] == player.getSymbol()) {
+            return 'top left corner'
+        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[6] == player.getSymbol()) {
+            return 'top right corner'
+        } else if (!board.includes(0)) {
+            return 'draw'
+        }
+    }
+
+    return { printBoard, playValue, checkBoard }
 }
 
 const Cell = () => {
@@ -62,5 +84,3 @@ const Game = (playerOne = 'Player One', playerTwo = 'Player Two', playerOneToken
 
     return { playRound }
 }
-
-const game = Game()
