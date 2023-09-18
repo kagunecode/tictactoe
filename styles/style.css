@@ -125,7 +125,7 @@ button:hover {
     justify-content: center;
 }
 
-.box:hover {
+.full:hover {
     cursor: pointer;
     transform: scale(1.03);
 }
