@@ -11,26 +11,28 @@ const GameBoard = () => {
         return true
     }
 
-    const checkBoard = () => {
-        if (board[0] == player.getSymbol() && board[1] == player.getSymbol() && board[2] == player.getSymbol()) {
-            return 'row 1'
-        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[5] == player.getSymbol()) {
-            return 'row 2'
-        } else if (board[6] == player.getSymbol() && board[7] == player.getSymbol() && board[8] == player.getSymbol()) {
-            return 'row 3'
-        } else if (board[0] == player.getSymbol() && board[3] == player.getSymbol() && board[6] == player.getSymbol()) {
-            return 'column 1'
-        } else if (board[1] == player.getSymbol() && board[4] == player.getSymbol() && board[7] == player.getSymbol()) {
-            return 'column 2'
-        } else if (board[2] == player.getSymbol() && board[5] == player.getSymbol() && board[8] == player.getSymbol()) {
-            return 'column 3'
-        } else if (board[0] == player.getSymbol() && board[4] == player.getSymbol() && board[8] == player.getSymbol()) {
-            return 'top left corner'
-        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[6] == player.getSymbol()) {
-            return 'top right corner'
-        } else if (!board.includes(0)) {
-            return 'draw'
+    const checkBoard = (token) => {
+        if (board[0].getValue() == token && board[1].getValue() == token && board[2].getValue() == token) {
+            return { 'status': 'win', 'position': 'row 1' }
+        } else if (board[3].getValue() == token && board[4].getValue() == token && board[5].getValue() == token) {
+            return { 'status': 'win', 'position': 'row 2' }
+        } else if (board[6].getValue() == token && board[7].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': 'row 3' }
+        } else if (board[0].getValue() == token && board[3].getValue() == token && board[6].getValue() == token) {
+            return { 'status': 'win', 'position': 'column 1' }
+        } else if (board[1].getValue() == token && board[4].getValue() == token && board[7].getValue() == token) {
+            return { 'status': 'win', 'position': 'column 2' }
+        } else if (board[2].getValue() == token && board[5].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': 'column 3' }
+        } else if (board[0].getValue() == token && board[4].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': 'top left corner' }
+        } else if (board[2].getValue() == token && board[4].getValue() == token && board[6].getValue() == token) {
+            return { 'status': 'win', 'position': 'top right corner' }
+        } else if (board[0].getValue() != 0 && board[1].getValue() != 0 && board[2].getValue() != 0 && board[3].getValue() != 0
+            && board[4].getValue() != 0 && board[5].getValue() != 0 && board[6].getValue() != 0 && board[7].getValue() != 0 && board[8].getValue() != 0) {
+            return { 'status': 'draw' }
         }
+        return { 'status': 'onProgress' }
     }
 
     return { printBoard, playValue, checkBoard }
@@ -49,7 +51,8 @@ const Cell = () => {
 }
 
 const Game = (playerOne = 'Player One', playerTwo = 'Player Two', playerOneToken = 'X', playerTwoToken = 'O') => {
-    const board = GameBoard()
+    let board = GameBoard()
+    let playGame = true
 
     const players = [
         {
@@ -67,20 +70,47 @@ const Game = (playerOne = 'Player One', playerTwo = 'Player Two', playerOneToken
     const switchTurn = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0]
 
     const newTurn = () => {
-        board.printBoard()
         console.log(`It's ${currentPlayer.name}'s turn!`)
+        board.printBoard()
+    }
+
+    const playerWin = () => {
+        if (board.checkBoard(currentPlayer.token).status == 'win') {
+            console.log(`${currentPlayer.name} won on ${board.checkBoard(currentPlayer.token).position}`)
+            board.printBoard()
+            return false
+        } else if (board.checkBoard(currentPlayer.token).status == 'draw') {
+            console.log(`It's a draw!`)
+            return false
+        }
+        return true
     }
 
     const playRound = position => {
-        if (board.playValue(position, currentPlayer.token)) {
-            switchTurn()
-            newTurn()
+        if (playGame) {
+            if (board.playValue(position, currentPlayer.token)) {
+                playGame = playerWin()
+                if (playGame) {
+                    switchTurn()
+                    newTurn()
+                }
+            } else {
+                console.log(`Sorry ${currentPlayer.name}, position ${position} has been already taken!`)
+            }
         } else {
-            console.log(`Sorry ${currentPlayer.name}, position ${position} has been already taken!`)
+            console.log('The game has ended, use reset!')
         }
+    }
+
+    const resetGame = () => {
+        board = GameBoard()
+        playGame = true
+        currentPlayer = players[0]
+        console.log(`The game has been reset!`)
+        newTurn()
     }
 
     newTurn()
 
-    return { playRound }
+    return { playRound, resetGame }
 }
