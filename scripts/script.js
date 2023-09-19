@@ -114,6 +114,7 @@ const screenController = () => {
     const boardDiv = document.querySelector('.center-box')
     const gameGrid = document.createElement('div')
     let alertDiv = document.createElement('h1')
+    const modeButton = document.querySelector('.mode-switch')
 
     const deleteInitScreen = () => {
         const player1 = document.getElementById('playerOneName').value
@@ -162,7 +163,21 @@ const screenController = () => {
         }))
     }
 
+    const modeSwitch = () => {
+        const body = document.body
+        if (modeButton.classList.contains('bi-brightness-low-fill')) {
+            body.classList.toggle('dark')
+            modeButton.classList.remove('bi-brightness-low-fill')
+            modeButton.classList.add('bi-moon-fill')
+        } else {
+            body.classList.toggle('dark')
+            modeButton.classList.remove('bi-moon-fill')
+            modeButton.classList.add('bi-brightness-low-fill')
+        }
+    }
+
     startButton.addEventListener('click', deleteInitScreen)
+    modeButton.addEventListener('click', modeSwitch)
 
     return { deleteInitScreen, createBoard, fillCell, updateStatus, paintWinner }
 }
