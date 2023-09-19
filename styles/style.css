@@ -28,7 +28,7 @@ body {
 }
 
 .init-container {
-    --bg-image: url(/assets/light-grid.svg);
+    --bg-image: url(../assets/light-grid.svg);
     --bg-opacity: 0.7;
 
     display: flex;

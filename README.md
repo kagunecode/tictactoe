@@ -6,3 +6,6 @@ This is a Tictactoe game for The Odin Project made using JS. You can find the co
 
 Since the main approach of this project is to build the game using a web UI the programming of the console edition was not the priority, so there could be bugs.
 
+# LIVE PREVIEW
+Check out the [live preview](https://kagunecode.github.io/tictactoe/). As of this version everything is working, however, there's no form validation for the names and I will implement a bot to play against. I'll keep this repo updated on the progress.
+
