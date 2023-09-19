@@ -6,12 +6,14 @@ body {
     --accent-color: #4059AD;
     --light-accent: #F7F8FF;
     --main-gray: #707070;
+    --main-green: #619B98;
 
     margin: 0;
     padding: 0;
     font-family: 'Inter', sans-serif;
     font-family: 'Raleway', sans-serif;
     color: var(--accent-color);
+    background-color: var(--background-color);
 }
 
 .init-container {
@@ -125,7 +127,11 @@ button:hover {
     justify-content: center;
 }
 
-.full:hover {
+.winner-box {
+    color: var(--main-green);
+}
+
+.available:hover {
     cursor: pointer;
     transform: scale(1.03);
 }

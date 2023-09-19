@@ -114,3 +114,15 @@ const Game = (playerOne = 'Player One', playerTwo = 'Player Two', playerOneToken
 
     return { playRound, resetGame }
 }
+
+const game = Game('Kagune', 'Sphynx')
+
+game.playRound(1)
+game.playRound(6)
+game.playRound(0)
+game.playRound(5)
+game.playRound(2)
+game.playRound(3)
+game.playRound(7)
+game.resetGame()
+game.playRound(1)

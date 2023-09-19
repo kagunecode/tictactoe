@@ -1,106 +1,170 @@
-const body = document.body
-const elementContainer = document.querySelector('.center-box')
-const startButton = document.querySelector('#start-button')
-let turn = 1
+const GameBoard = () => {
+    let board = [Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell()]
 
-startButton.addEventListener('click', deleteElements)
+    const getBoard = () => board
 
-
-const Player = (name, symbol) => {
-    const getSymbol = () => symbol
-
-    const playTurn = () => {
-        return `It's ${name}'s turn!`
+    const playValue = (position, token) => {
+        if (board[position].getValue() != 0) return false
+        board[position].setValue(token)
+        return true
     }
 
-    const win = () => {
-        return `${name} has won the game!`
+    const checkBoard = (token) => {
+        if (board[0].getValue() == token && board[1].getValue() == token && board[2].getValue() == token) {
+            return { 'status': 'win', 'position': [0, 1, 2] }
+        } else if (board[3].getValue() == token && board[4].getValue() == token && board[5].getValue() == token) {
+            return { 'status': 'win', 'position': [3, 4, 5] }
+        } else if (board[6].getValue() == token && board[7].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': [6, 7, 8] }
+        } else if (board[0].getValue() == token && board[3].getValue() == token && board[6].getValue() == token) {
+            return { 'status': 'win', 'position': [0, 3, 6] }
+        } else if (board[1].getValue() == token && board[4].getValue() == token && board[7].getValue() == token) {
+            return { 'status': 'win', 'position': [1, 4, 7] }
+        } else if (board[2].getValue() == token && board[5].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': [2, 5, 8] }
+        } else if (board[0].getValue() == token && board[4].getValue() == token && board[8].getValue() == token) {
+            return { 'status': 'win', 'position': [0, 4, 8] }
+        } else if (board[2].getValue() == token && board[4].getValue() == token && board[6].getValue() == token) {
+            return { 'status': 'win', 'position': [2, 4, 6] }
+        } else if (board[0].getValue() != 0 && board[1].getValue() != 0 && board[2].getValue() != 0 && board[3].getValue() != 0
+            && board[4].getValue() != 0 && board[5].getValue() != 0 && board[6].getValue() != 0 && board[7].getValue() != 0 && board[8].getValue() != 0) {
+            return { 'status': 'draw' }
+        }
+        return { 'status': 'onProgress' }
     }
 
-    return { playTurn, win, getSymbol }
+    return { getBoard, playValue, checkBoard }
 }
 
-const Game = (player1, player2) => {
-    const board = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    let position = 0
-    const play = (player, e) => {
-        position = e.target.getAttribute('data-id')
-        board[position] = player.getSymbol()
-        e.target.innerText = player.getSymbol()
+const Cell = () => {
+    let value = 0
+
+    const getValue = () => value
+
+    const setValue = token => {
+        value = token
     }
 
-    const turn = turn => {
-        if (turn % 2 != 0) {
-            return player2.playTurn()
+    return { getValue, setValue }
+}
+
+const Game = (playerOne = 'Player One', playerTwo = 'Player Two') => {
+    const board = GameBoard()
+    let playGame = true
+
+
+    const players = [
+        {
+            name: playerOne,
+            token: 'X'
+        },
+        {
+            name: playerTwo,
+            token: 'O'
+        }
+    ]
+
+    let currentPlayer = players[0]
+
+    const switchPlayerTurn = () => currentPlayer = currentPlayer === players[0] ? players[1] : players[0]
+
+    const newTurn = () => {
+        screen.updateStatus(`It's ${currentPlayer.name}'s turn!`)
+    }
+
+    const playerWin = () => {
+        if (board.checkBoard(currentPlayer.token).status === 'win') {
+            screen.updateStatus(`${currentPlayer.name} won!`)
+            screen.paintWinner(board.checkBoard(currentPlayer.token).position)
+            return false
+        } else if (board.checkBoard(currentPlayer.token).status === 'draw') {
+            screen.updateStatus(`It's a draw!`)
+            return false
+        }
+        return true
+    }
+
+    const playRound = position => {
+        if (playGame) {
+            if (board.playValue(position, currentPlayer.token)) {
+                playGame = playerWin()
+                screen.fillCell(position, currentPlayer.token)
+                if (playGame) {
+                    switchPlayerTurn()
+                    newTurn()
+                }
+            } else {
+                screen.updateStatus(`${currentPlayer.name}, the cell is taken!`)
+            }
         } else {
-            return player1.playTurn()
+            screen.updateStatus('The game has ended!')
         }
     }
 
-    const checkBoard = (player) => {
-        if (board[0] == player.getSymbol() && board[1] == player.getSymbol() && board[2] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[5] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[6] == player.getSymbol() && board[7] == player.getSymbol() && board[8] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[0] == player.getSymbol() && board[3] == player.getSymbol() && board[6] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[1] == player.getSymbol() && board[4] == player.getSymbol() && board[7] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[2] == player.getSymbol() && board[5] == player.getSymbol() && board[8] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[0] == player.getSymbol() && board[4] == player.getSymbol() && board[8] == player.getSymbol()) {
-            window.alert(player.win())
-        } else if (board[3] == player.getSymbol() && board[4] == player.getSymbol() && board[6] == player.getSymbol()) {
-            window.alert(player.win())
-        }
-    }
+    newTurn()
 
-    return { play, checkBoard }
+    return { playRound }
 }
 
-function deleteElements() {
-    const player1 = Player(document.getElementById('playerOneName').value, 'X')
-    const player2 = Player(document.getElementById('playerTwoName').value, 'O')
-    const game = Game(player1, player2)
+// UI HANDLE CODE
 
-    while (elementContainer.lastChild) {
-        elementContainer.removeChild(elementContainer.lastChild)
-    }
+const screenController = () => {
+    let game = ''
+    const startButton = document.querySelector('#start-button')
+    const boardDiv = document.querySelector('.center-box')
+    const gameGrid = document.createElement('div')
+    let alertDiv = document.createElement('h1')
 
-    let gameContainer = document.createElement('div')
-    gameContainer.classList.add('game-container')
-    elementContainer.appendChild(gameContainer)
-
-    let gameAlert = document.createElement('h1')
-    gameAlert.classList.add('game-alert')
-    gameAlert.innerText = `Let's start!`
-    elementContainer.append(gameAlert)
-
-    for (let i = 0; i < 9; i++) {
-        let newDiv = document.createElement('div')
-        newDiv.classList.add('box')
-        newDiv.classList.add('full')
-        newDiv.setAttribute('data-id', i)
-        console.log(i)
-        gameContainer.appendChild(newDiv)
-    }
-
-    const boxes = document.querySelectorAll('.full')
-    boxes.forEach(box => box.addEventListener('click', e => {
-        if (turn % 2 != 0) {
-            gameAlert.innerText = player2.playTurn()
-            game.play(player1, e)
-            e.target.classList.remove('full')
-            turn += 1
-            game.checkBoard(player1)
-        } else {
-            gameAlert.innerText = player1.playTurn()
-            game.play(player2, e)
-            e.target.classList.remove('full')
-            turn += 1
-            game.checkBoard(player2)
+    const deleteInitScreen = () => {
+        const player1 = document.getElementById('playerOneName').value
+        const player2 = document.getElementById('playerTwoName').value
+        while (boardDiv.lastChild) {
+            boardDiv.removeChild(boardDiv.lastChild)
         }
-    }))
+        game = Game(player1, player2)
+        createBoard()
+    }
+
+    const fillCell = (position, token) => {
+        let currentCell = document.getElementById(`${position}`)
+        currentCell.innerText = token
+    }
+
+    const updateStatus = message => {
+        alertDiv.innerText = message
+    }
+
+    const paintWinner = position => {
+        const cells = document.querySelectorAll('.box')
+        for (let i = 0; i < position.length; i++) {
+            cells[position[i]].classList.add('winner-box')
+        }
+    }
+
+    const createBoard = () => {
+        gameGrid.classList.add('game-container')
+        boardDiv.append(gameGrid)
+
+        alertDiv.classList.add('game-alert')
+        boardDiv.append(alertDiv)
+
+        for (let i = 0; i < 9; i++) {
+            const newCell = document.createElement('div')
+            newCell.classList.add('box')
+            newCell.classList.add('available')
+            newCell.setAttribute('id', i)
+            gameGrid.append(newCell)
+        }
+
+        const allCells = document.querySelectorAll('.box')
+        allCells.forEach(cell => cell.addEventListener('click', e => {
+            game.playRound(e.target.getAttribute('id'))
+        }))
+    }
+
+    startButton.addEventListener('click', deleteInitScreen)
+
+    return { deleteInitScreen, createBoard, fillCell, updateStatus, paintWinner }
 }
+
+const screen = screenController()
