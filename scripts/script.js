@@ -1,3 +1,4 @@
+// BOARD FUNCTION
 const GameBoard = () => {
     let board = [Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell(), Cell()]
 
@@ -7,6 +8,14 @@ const GameBoard = () => {
         if (board[position].getValue() != 0) return false
         board[position].setValue(token)
         return true
+    }
+
+    const availablePlay = () => {
+        let availablePosition = []
+        for (let i = 0; i < 9; i++) {
+            if (board[i].getValue() == 0) availablePosition.push(i)
+        }
+        return availablePosition
     }
 
     const checkBoard = (token) => {
@@ -33,9 +42,10 @@ const GameBoard = () => {
         return { 'status': 'onProgress' }
     }
 
-    return { getBoard, playValue, checkBoard }
+    return { getBoard, playValue, checkBoard, availablePlay }
 }
 
+// CELL FUNCTION, TO FILL THE BOARD
 const Cell = () => {
     let value = 0
 
@@ -48,6 +58,7 @@ const Cell = () => {
     return { getValue, setValue }
 }
 
+// GAME FLOW FUNCTION
 const Game = (playerOne = 'Player One', playerTwo = 'Player Two') => {
     const board = GameBoard()
     let playGame = true
@@ -107,7 +118,6 @@ const Game = (playerOne = 'Player One', playerTwo = 'Player Two') => {
 }
 
 // UI HANDLE CODE
-
 const screenController = () => {
     let game = ''
     const startButton = document.querySelector('#start-button')
@@ -180,6 +190,15 @@ const screenController = () => {
     modeButton.addEventListener('click', modeSwitch)
 
     return { deleteInitScreen, createBoard, fillCell, updateStatus, paintWinner }
+}
+
+// AI CODE
+const computerPlayer = (board, humanPlayer, winState) => {
+    let name = 'KAI'
+
+    const getName = () => name
+
+    return { getName }
 }
 
 const screen = screenController()
