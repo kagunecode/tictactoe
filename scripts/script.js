@@ -61,7 +61,7 @@ const Cell = () => {
 // GAME FLOW FUNCTION
 const Game = (playerOne = 'Player One', playerTwo = 'Player Two') => {
     const board = GameBoard()
-    let playGame = true
+    let playerWin = false
 
 
     const players = [
@@ -83,24 +83,24 @@ const Game = (playerOne = 'Player One', playerTwo = 'Player Two') => {
         screen.updateStatus(`It's ${currentPlayer.name}'s turn!`)
     }
 
-    const playerWin = () => {
+    const checkWin = () => {
         if (board.checkBoard(currentPlayer.token).status === 'win') {
             screen.updateStatus(`${currentPlayer.name} won!`)
             screen.paintWinner(board.checkBoard(currentPlayer.token).position)
-            return false
+            return true
         } else if (board.checkBoard(currentPlayer.token).status === 'draw') {
             screen.updateStatus(`It's a draw!`)
-            return false
+            return true
         }
-        return true
+        return false
     }
 
     const playRound = position => {
-        if (playGame) {
+        if (!playerWin) {
             if (board.playValue(position, currentPlayer.token)) {
-                playGame = playerWin()
+                playerWin = checkWin()
                 screen.fillCell(position, currentPlayer.token)
-                if (playGame) {
+                if (!playerWin) {
                     switchPlayerTurn()
                     newTurn()
                 }
@@ -193,12 +193,23 @@ const screenController = () => {
 }
 
 // AI CODE
-const computerPlayer = (board, humanPlayer, winState) => {
-    let name = 'KAI'
+const minimax = (board, depth) => {
+    let bestMove = 0
+    let availableMoves = board.availablePlay()
+    let computerTurn = true
+    let minimaxBoard = board
+    let score = 0
 
-    const getName = () => name
-
-    return { getName }
+    if (availableMoves.length > 0) {
+        for (move in availableMoves) {
+            if (computerTurn) {
+                minimaxBoard.playValue(move, 'X')
+                if (minimaxBoard.checkBoard('X').status == 'win') {
+                    return availableMoves[move]
+                }
+            }
+        }
+    }
 }
 
 const screen = screenController()
